@@ -1,0 +1,31 @@
+Public clock As Boolean
+Public currenttime, currentday As String
+
+Sub Pause()
+Dim PauseTime, Start
+PauseTime = 1
+Start = Timer
+Do While Timer < Start + PauseTime
+DoEvents
+Loop
+End Sub
+
+Sub StartClock()
+clock = Time
+Do Until clock = False
+On Error Resume Next
+currenttime = Format((Now()), "hh:mm:ss AM/PM")
+currenttime = Mid(currenttime, 1, Len(currenttime) - 3)
+ActivePresentation.Slides(SlideShowWindows(1).View.CurrentShowPosition).Shapes("shpClock").TextFrame.TextRange.Text = currenttime
+Pause
+Loop
+End Sub
+
+Sub OnSlideShowPageChange(ByVal objWindow As SlideShowWindow)
+clock = Flase
+ActivePresentation.Slides(SlideShowWindows(1).View.CurrentShowPosition).Shapes("shpClock").TextFrame.TextRange.Text = "--:--:--"
+End Sub
+
+Sub OnSlideShowPageTerminate()
+clock = False
+End Sub
